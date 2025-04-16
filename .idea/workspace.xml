@@ -5,31 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b2e88c9-06f1-4f0a-808e-b4baa0ae49d2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/task_dashboard.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/css/main.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/js/dashboard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/js/tasks.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/less/components.less" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/less/main.less" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/less/variables.less" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/task_dashboard/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/task_dashboard/asgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/task_dashboard/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/task_dashboard/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/task_dashboard/wsgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tasks/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tasks/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tasks/dashboard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tasks/task_form.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/tasks/task_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task_dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/task_dashboard/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task_dashboard/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/task_dashboard/wsgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tasks/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +44,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -114,7 +95,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1744777336753</updated>
-      <workItem from="1744777338168" duration="1411000" />
+      <workItem from="1744777338168" duration="2180000" />
     </task>
     <servers />
   </component>
