@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task Dashboard{% endblock %}</title>
+    
+    <!-- Fomantic UI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.0/dist/semantic.min.css">
+    
+    <!-- DevExpress CSS -->
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/23.1.3/css/dx.light.css">
+    
+    <!-- Custom CSS compiled from LESS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="ui sidebar inverted vertical menu">
+        <div class="item">
+            <div class="header">Task Management</div>
+            <div class="menu">
+                <a class="item {% if request.path == '/' %}active{% endif %}" href="{% url 'tasks:dashboard' %}">
+                    <i class="dashboard icon"></i> Dashboard
+                </a>
+                <a class="item {% if 'tasks/' in request.path %}active{% endif %}" href="{% url 'tasks:task_list' %}">
+                    <i class="tasks icon"></i> All Tasks
+                </a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="header">Categories</div>
+            <div class="menu" id="category-menu">
+                <!-- Will be populated with JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="pusher">
+        <div class="ui fixed inverted menu">
+            <div class="ui container">
+                <a class="item" id="sidebar-toggle">
+                    <i class="sidebar icon"></i>
+                </a>
+                <div class="header item">
+                    <i class="tasks icon"></i> Task Dashboard
+                </div>
+                <div class="right menu">
+                    <div class="ui dropdown item">
+                        <i class="user icon"></i> User
+                        <div class="menu">
+                            <a class="item"><i class="settings icon"></i> Settings</a>
+                            <a class="item"><i class="sign out icon"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui container main-content">
+            <div class="ui basic segment">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <div class="ui inverted vertical footer segment">
+            <div class="ui container">
+                <div class="ui inverted divided grid">
+                    <div class="sixteen wide column">
+                        <p>&copy; 2025 Task Dashboard. Made with Django, Fomantic-UI & DevExpress.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Fomantic UI JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.0/dist/semantic.min.js"></script>
+    
+    <!-- DevExpress JS -->
+    <script src="https://cdn3.devexpress.com/jslib/23.1.3/js/dx.all.js"></script>
+    
+    <!-- Main JS -->
+    <script>
+        $(document).ready(function() {
+            // Initialize sidebar
+            $('#sidebar-toggle').click(function() {
+                $('.ui.sidebar').sidebar('toggle');
+            });
+            
+            // Initialize dropdowns
+            $('.ui.dropdown').dropdown();
+            
+            // Initialize accordions
+            $('.ui.accordion').accordion();
+            
+            // Get categories for sidebar
+            $.ajax({
+                url: '/api/categories/',
+                method: 'GET',
+                success: function(data) {
+                    let categoryMenu = $('#category-menu');
+                    data.forEach(function(category) {
+                        categoryMenu.append(
+                            `<a class="item" href="/tasks/?category=${category.id}" style="border-left: 3px solid ${category.color}">
+                                ${category.name} <div class="ui label">${category.task_count}</div>
+                            </a>`
+                        );
+                    });
+                }
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

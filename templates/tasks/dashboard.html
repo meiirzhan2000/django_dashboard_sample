@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Task Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    .statistic .value {
+        font-size: 2.5rem !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ui grid">
+    <div class="sixteen wide column">
+        <h1 class="ui header">
+            <i class="dashboard icon"></i>
+            <div class="content">
+                Dashboard
+                <div class="sub header">Overview of your tasks and activities</div>
+            </div>
+        </h1>
+        <div class="ui divider"></div>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="ui four statistics">
+    <div class="statistic">
+        <div class="value">
+            <i class="tasks icon"></i> {{ task_stats.total }}
+        </div>
+        <div class="label">Total Tasks</div>
+    </div>
+    <div class="blue statistic">
+        <div class="value">
+            <i class="hourglass half icon"></i> {{ task_stats.pending }}
+        </div>
+        <div class="label">Pending</div>
+    </div>
+    <div class="yellow statistic">
+        <div class="value">
+            <i class="sync icon"></i> {{ task_stats.in_progress }}
+        </div>
+        <div class="label">In Progress</div>
+    </div>
+    <div class="red statistic">
+        <div class="value">
+            <i class="exclamation triangle icon"></i> {{ task_stats.overdue }}
+        </div>
+        <div class="label">Overdue</div>
+    </div>
+</div>
+
+<div class="ui stackable grid">
+    <!-- Task Completion Chart (DevExpress) -->
+    <div class="eight wide column">
+        <div class="ui segment">
+            <h3 class="ui header">Task Status Distribution</h3>
+            <div id="chart-container" style="height: 300px;"></div>
+        </div>
+    </div>
+    
+    <!-- Category Stats -->
+    <div class="eight wide column">
+        <div class="ui segment">
+            <h3 class="ui header">Tasks by Category</h3>
+            <div class="ui relaxed divided list">
+                {% for category in categories %}
+                <div class="item">
+                    <div class="right floated content">
+                        <div class="ui label">{{ category.task_count }}</div>
+                    </div>
+                    <i class="folder icon" style="color: {{ category.color }}"></i>
+                    <div class="content">
+                        <div class="header">{{ category.name }}</div>
+                        <div class="description">{{ category.pending_count }} pending tasks</div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="item">No categories found</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Tasks -->
+    <div class="eight wide column">
+        <div class="ui segment">
+            <h3 class="ui header">Recent Tasks</h3>
+            <div class="ui relaxed divided list">
+                {% for task in recent_tasks %}
+                <div class="item">
+                    <div class="right floated content">
+                        <div class="ui {% if task.status == 'pending' %}blue{% elif task.status == 'in_progress' %}yellow{% elif task.status == 'completed' %}green{% else %}grey{% endif %} label">
+                            {{ task.get_status_display }}
+                        </div>
+                    </div>
+                    <i class="{% if task.priority == 4 %}exclamation circle red{% elif task.priority == 3 %}exclamation triangle orange{% elif task.priority == 2 %}dot circle outline blue{% else %}circle outline grey{% endif %} icon"></i>
+                    <div class="content">
+                        <div class="header">{{ task.title }}</div>
+                        <div class="description">
+                            {% if task.category %}
+                            <span class="ui tiny label" style="background-color: {{ task.category.color }}; color: white;">
+                                {{ task.category.name }}
+                            </span>
+                            {% endif %}
+                            Added {{ task.created_at|timesince }} ago
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="item">No recent tasks</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upcoming Tasks (with DevExpress Timeline) -->
+    <div class="eight wide column">
+        <div class="ui segment">
+            <h3 class="ui header">Upcoming Deadlines</h3>
+            <div id="timeline-container" style="height: 300px;"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        // Task Status Chart (DevExpress)
+        const chartData = [
+            { status: "Pending", count: {{ task_stats.pending }}, color: "#2185D0" },
+            { status: "In Progress", count: {{ task_stats.in_progress }}, color: "#FBBD08" },
+            { status: "Completed", count: {{ task_stats.completed }}, color: "#21BA45" },
+            { status: "Overdue", count: {{ task_stats.overdue }}, color: "#DB2828" }
+        ];
+        
+        $("#chart-container").dxPieChart({
+            palette: "bright",
+            dataSource: chartData,
+            series: {
+                argumentField: "status",
+                valueField: "count",
+                label: {
+                    visible: true,
+                    connector: {
+                        visible: true
+                    },
+                    format: "fixedPoint",
+                    customizeText: function(point) {
+                        return point.argumentText + ": " + point.valueText;
+                    }
+                }
+            },
+            title: "Task Distribution",
+            export: {
+                enabled: true
+            },
+            tooltip: {
+                enabled: true,
+                customizeTooltip: function(arg) {
+                    return {
+                        text: arg.argumentText + ": " + arg.valueText + " tasks"
+                    };
+                }
+            },
+            legend: {
+                horizontalAlignment: "center",
+                verticalAlignment: "bottom"
+            }
+        });
+        
+        // Timeline for Upcoming Tasks
+        const timelineData = [
+            {% for task in upcoming_tasks %}
+            {
+                id: {{ task.id }},
+                title: "{{ task.title }}",
+                dueDate: new Date("{{ task.due_date|date:'c' }}"),
+                priority: {{ task.priority }},
+                status: "{{ task.status }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        $("#timeline-container").dxScheduler({
+            dataSource: timelineData,
+            views: ["timelineDay"],
+            currentView: "timelineDay",
+            startDayHour: 8,
+            endDayHour: 20,
+            currentDate: new Date(),
+            height: 300,
+            cellDuration: 60,
+            editing: false,
+            showAllDayPanel: false,
+            appointmentTemplate: function(data) {
+                let priorityClass;
+                switch(data.priority) {
+                    case 4: priorityClass = "red"; break;
+                    case 3: priorityClass = "orange"; break;
+                    case 2: priorityClass = "blue"; break;
+                    default: priorityClass = "grey";
+                }
+                
+                return $("<div class='dx-scheduler-appointment-content'>")
+                    .append($("<div class='dx-scheduler-appointment-title'>").text(data.title))
+                    .append($("<div class='dx-scheduler-appointment-content-details'>")
+                        .append($("<span class='ui mini " + priorityClass + " label'>").text("Priority: " + data.priority)));
+            }
+        });
+    });
+</script>
+{% endblock %}

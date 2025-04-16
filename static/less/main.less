@@ -1,0 +1,184 @@
+// Import variables and components
+@import "variables.less";
+@import "components.less";
+
+// Global styles
+body {
+  font-family: @font-family;
+  font-size: @font-size-base;
+  color: @text-color;
+  background-color: @background-light;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+// Layout
+.main-content {
+  margin-top: 60px; // Adjust for fixed header
+  padding: @space-lg 0;
+  min-height: calc(100vh - 60px - 100px); // Adjusted for header and footer
+}
+
+.ui.footer {
+  margin-top: @space-xxl;
+  padding: @space-lg 0;
+}
+
+// Sidebar customizations
+.ui.sidebar {
+  .item {
+    .active {
+      background-color: fade(@primary-color, 15%) !important;
+    }
+
+    i.icon {
+      float: left;
+      margin-right: @space-md;
+    }
+  }
+}
+
+// Navigation
+.ui.fixed.menu {
+  height: 60px;
+
+  .header.item {
+    font-size: @font-size-large;
+    font-weight: bold;
+  }
+}
+
+// Forms
+.ui.form {
+  .field {
+    margin-bottom: @space-md;
+
+    label {
+      font-weight: bold;
+      margin-bottom: @space-xs;
+    }
+  }
+}
+
+// Buttons
+.ui.button {
+  transition: all 0.3s ease;
+
+  &.primary {
+    background-color: @primary-color;
+    color: @text-inverse;
+
+    &:hover {
+      background-color: darken(@primary-color, 5%);
+    }
+  }
+
+  &.secondary {
+    background-color: @secondary-color;
+    color: @text-inverse;
+
+    &:hover {
+      background-color: darken(@secondary-color, 5%);
+    }
+  }
+}
+
+// Status colors
+.status {
+  &.pending { color: @primary-color; }
+  &.in-progress { color: @warning-color; }
+  &.completed { color: @secondary-color; }
+  &.canceled, &.overdue { color: @tertiary-color; }
+}
+
+// Priority colors
+.priority {
+  &.low { color: @text-light; }
+  &.medium { color: @primary-color; }
+  &.high { color: @warning-color; }
+  &.urgent { color: @tertiary-color; }
+}
+
+// Statistics
+.ui.statistics {
+  margin: @space-lg 0;
+
+  .statistic {
+    margin-bottom: @space-lg;
+
+    .value {
+      color: @primary-color;
+      font-weight: bold;
+    }
+
+    &.blue .value { color: @primary-color; }
+    &.green .value { color: @secondary-color; }
+    &.red .value { color: @tertiary-color; }
+    &.yellow .value { color: @warning-color; }
+  }
+}
+
+// Segment customizations
+.ui.segment {
+  box-shadow: @box-shadow;
+  margin-bottom: @space-lg;
+
+  &:hover {
+    box-shadow: @box-shadow-hover;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: @tablet-breakpoint) {
+  .ui.statistics {
+    flex-direction: column;
+
+    .statistic {
+      margin-bottom: @space-md;
+    }
+  }
+
+  .ui.container {
+    margin-left: @space-sm !important;
+    margin-right: @space-sm !important;
+  }
+}
+
+// DevExpress integrations
+.dx-widget {
+  font-family: @font-family;
+
+  .dx-button {
+    border-radius: @border-radius;
+  }
+}
+
+// Animation effects
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Utility classes
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: @space-xs; }
+.mb-2 { margin-bottom: @space-sm; }
+.mb-3 { margin-bottom: @space-md; }
+.mb-4 { margin-bottom: @space-lg; }
+.mb-5 { margin-bottom: @space-xl; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: @space-xs; }
+.mt-2 { margin-top: @space-sm; }
+.mt-3 { margin-top: @space-md; }
+.mt-4 { margin-top: @space-lg; }
+.mt-5 { margin-top: @space-xl; }

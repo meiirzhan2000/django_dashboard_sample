@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if task.id %}Edit Task{% else %}Create New Task{% endif %} - Task Management{% endblock %}
+
+{% block content %}
+<div class="ui grid">
+    <div class="sixteen wide column">
+        <h1 class="ui header">
+            <i class="{% if task.id %}edit{% else %}plus{% endif %} icon"></i>
+            <div class="content">
+                {% if task.id %}Edit Task: {{ task.title }}{% else %}Create New Task{% endif %}
+                <div class="sub header">{% if task.id %}Update task details{% else %}Add a new task to your list{% endif %}</div>
+            </div>
+        </h1>
+        <div class="ui divider"></div>
+    </div>
+</div>
+
+<div class="ui segment">
+    <form class="ui form" method="POST" action="{% if task.id %}{% url 'tasks:update_task' task.id %}{% else %}{% url 'tasks:create_task' %}{% endif %}">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="ui negative message">
+            <div class="header">There were some errors with your submission</div>
+            <ul class="list">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        <!-- Task Title -->
+        <div class="required field {% if form.title.errors %}error{% endif %}">
+            <label>Task Title</label>
+            <input type="text" name="title" placeholder="Enter task title" value="{{ form.title.value|default:'' }}" required>
+            {% if form.title.errors %}
+            <div class="ui pointing red basic label">
+                {% for error in form.title.errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Task Description -->
+        <div class="field {% if form.description.errors %}error{% endif %}">
+            <label>Description</label>
+            <textarea name="description" rows="4" placeholder="Enter task description">{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}
+            <div class="ui pointing red basic label">
+                {% for error in form.description.errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="three fields">
+            <!-- Category -->
+            <div class="field {% if form.category.errors %}error{% endif %}">
+                <label>Category</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="category" value="{{ form.category.value|default:'' }}">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Category</div>
+                    <div class="menu">
+                        <div class="item" data-value="">None</div>
+                        {% for category in categories %}
+                        <div class="item" data-value="{{ category.id }}" style="border-left: 3px solid {{ category.color }}">
+                            {{ category.name }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if form.category.errors %}
+                <div class="ui pointing red basic label">
+                    {% for error in form.category.errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Status -->
+            <div class="field {% if form.status.errors %}error{% endif %}">
+                <label>Status</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="status" value="{{ form.status.value|default:'pending' }}">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Status</div>
+                    <div class="menu">
+                        {% for status_value, status_name in status_choices %}
+                        <div class="item" data-value="{{ status_value }}">
+                            <i class="{% if status_value == 'pending' %}hourglass half blue{% elif status_value == 'in_progress' %}sync yellow{% elif status_value == 'completed' %}check circle green{% else %}ban red{% endif %} icon"></i>
+                            {{ status_name }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if form.status.errors %}
+                <div class="ui pointing red basic label">
+                    {% for error in form.status.errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Priority -->
+            <div class="field {% if form.priority.errors %}error{% endif %}">
+                <label>Priority</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="priority" value="{{ form.priority.value|default:'2' }}">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Priority</div>
+                    <div class="menu">
+                        {% for priority_value, priority_name in priority_choices %}
+                        <div class="item" data-value="{{ priority_value }}">
+                            <i class="{% if priority_value == 1 %}circle outline grey{% elif priority_value == 2 %}dot circle outline blue{% elif priority_value == 3 %}exclamation triangle orange{% else %}exclamation circle red{% endif %} icon"></i>
+                            {{ priority_name }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if form.priority.errors %}
+                <div class="ui pointing red basic label">
+                    {% for error in form.priority.errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Due Date -->
+        <div class="field {% if form.due_date.errors %}error{% endif %}">
+            <label>Due Date</label>
+            <div class="ui calendar" id="due-date-calendar">
+                <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    <input type="text" name="due_date" placeholder="Select due date" value="{{ form.due_date.value|date:'Y-m-d H:i'|default:'' }}">
+                </div>
+            </div>
+            {% if form.due_date.errors %}
+            <div class="ui pointing red basic label">
+                {% for error in form.due_date.errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+            <div class="ui checkbox mt-2">
+                <input type="checkbox" name="no_due_date" id="no-due-date" {% if not form.due_date.value %}checked{% endif %}>
+                <label for="no-due-date">No due date</label>
+            </div>
+        </div>
+        
+        <!-- Form Actions -->
+        <div class="ui divider"></div>
+        
+        <button class="ui primary button" type="submit">
+            <i class="save icon"></i> {% if task.id %}Update Task{% else %}Create Task{% endif %}
+        </button>
+        
+        <a class="ui button" href="{% url 'tasks:task_list' %}">
+            <i class="cancel icon"></i> Cancel
+        </a>
+        
+        {% if task.id %}
+        <button type="button" class="ui right floated negative button" id="delete-task-button" data-task-id="{{ task.id }}">
+            <i class="trash icon"></i> Delete Task
+        </button>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Delete Confirmation Modal -->
+{% if task.id %}
+<div class="ui basic modal" id="delete-confirmation-modal">
+    <div class="ui icon header">
+        <i class="trash icon"></i>
+        Delete Task
+    </div>
+    <div class="content">
+        <p>Are you sure you want to delete the task "{{ task.title }}"? This action cannot be undone.</p>
+    </div>
+    <div class="actions">
+        <div class="ui red basic cancel inverted button">
+            <i class="remove icon"></i>
+            No
+        </div>
+        <form method="POST" action="{% url 'tasks:delete_task' task.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="ui green ok inverted button">
+                <i class="checkmark icon"></i>
+                Yes
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Initialize dropdowns
+        $('.ui.dropdown').dropdown();
+        
+        // Initialize calendar/date picker
+        $('#due-date-calendar').calendar({
+            type: 'datetime',
+            ampm: false,
+            formatter: {
+                datetime: function(date, settings) {
+                    if (!date) return '';
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    
+                    // Add leading zeros
+                    day = (day < 10) ? '0' + day : day;
+                    month = (month < 10) ? '0' + month : month;
+                    hours = (hours < 10) ? '0' + hours : hours;
+                    minutes = (minutes < 10) ? '0' + minutes : minutes;
+                    
+                    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+                }
+            }
+        });
+        
+        // No due date checkbox functionality
+        $('#no-due-date').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#due-date-calendar input').val('').prop('disabled', true);
+                $('#due-date-calendar').addClass('disabled');
+            } else {
+                $('#due-date-calendar input').prop('disabled', false);
+                $('#due-date-calendar').removeClass('disabled');
+            }
+        });
+        
+        // Initialize no due date state
+        if ($('#no-due-date').is(':checked')) {
+            $('#due-date-calendar input').val('').prop('disabled', true);
+            $('#due-date-calendar').addClass('disabled');
+        }
+        
+        // Delete task button
+        $('#delete-task-button').on('click', function() {
+            $('#delete-confirmation-modal')
+                .modal('show');
+        });
+    });
+</script>
+{% endblock %}

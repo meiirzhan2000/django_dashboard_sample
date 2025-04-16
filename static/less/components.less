@@ -1,0 +1,188 @@
+// Import variables
+@import "variables.less";
+
+// Card component
+.custom-card {
+  background-color: white;
+  border-radius: @border-radius;
+  box-shadow: @box-shadow;
+  padding: @space-md;
+  margin-bottom: @space-lg;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: @box-shadow-hover;
+  }
+
+  .card-header {
+    font-size: @font-size-large;
+    font-weight: bold;
+    margin-bottom: @space-md;
+    color: @primary-color;
+    border-bottom: 1px solid @border-color;
+    padding-bottom: @space-sm;
+  }
+
+  .card-content {
+    color: @text-color;
+  }
+
+  .card-footer {
+    margin-top: @space-md;
+    padding-top: @space-sm;
+    border-top: 1px solid @border-color;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+// Status badge component
+.status-badge {
+  display: inline-block;
+  padding: @space-xs @space-sm;
+  border-radius: @border-radius;
+  font-size: @font-size-small;
+  font-weight: bold;
+
+  &.pending {
+    background-color: @primary-color;
+    color: @text-inverse;
+  }
+
+  &.in-progress {
+    background-color: @warning-color;
+    color: @text-color;
+  }
+
+  &.completed {
+    background-color: @secondary-color;
+    color: @text-inverse;
+  }
+
+  &.canceled, &.overdue {
+    background-color: @tertiary-color;
+    color: @text-inverse;
+  }
+}
+
+// Task item component
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: @space-sm;
+  border-bottom: 1px solid @border-color;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .task-icon {
+    margin-right: @space-md;
+    font-size: @font-size-large;
+
+    &.priority-1 { color: @text-light; }
+    &.priority-2 { color: @primary-color; }
+    &.priority-3 { color: @warning-color; }
+    &.priority-4 { color: @tertiary-color; }
+  }
+
+  .task-content {
+    flex: 1;
+
+    .task-title {
+      font-weight: bold;
+      margin-bottom: @space-xs;
+    }
+
+    .task-meta {
+      font-size: @font-size-small;
+      color: @text-light;
+      display: flex;
+      flex-wrap: wrap;
+
+      .meta-item {
+        margin-right: @space-md;
+
+        i {
+          margin-right: @space-xs;
+        }
+      }
+    }
+  }
+
+  .task-actions {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Category indicator
+.category-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: @space-xs;
+}
+
+// Dashboard widgets
+.dashboard-widget {
+  background-color: white;
+  border-radius: @border-radius;
+  box-shadow: @box-shadow;
+  margin-bottom: @space-lg;
+  overflow: hidden;
+
+  .widget-header {
+    padding: @space-md;
+    border-bottom: 1px solid @border-color;
+    background-color: @background-light;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    i {
+      margin-right: @space-sm;
+      color: @primary-color;
+    }
+  }
+
+  .widget-content {
+    padding: @space-md;
+  }
+
+  .widget-footer {
+    padding: @space-sm @space-md;
+    background-color: @background-light;
+    border-top: 1px solid @border-color;
+    font-size: @font-size-small;
+    text-align: right;
+  }
+}
+
+// DevExpress overrides
+.dx-datagrid {
+  .dx-datagrid-headers {
+    background-color: @background-light;
+    color: @text-color;
+    font-weight: bold;
+  }
+
+  .dx-row-alt {
+    background-color: fade(@primary-color, 5%);
+  }
+}
+
+// Responsive overrides
+@media (max-width: @tablet-breakpoint) {
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .task-actions {
+      margin-top: @space-sm;
+      align-self: flex-end;
+    }
+  }
+}
