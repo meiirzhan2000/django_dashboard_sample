@@ -23,17 +23,6 @@ A modern task management dashboard built with Django, Fomantic-UI, and DevExpres
   - LESS for CSS preprocessing
 - **Data Visualization**: DevExpress charts for task distribution and timelines
 
-## Screenshots
-
-### Dashboard
-![Dashboard](docs/images/dashboard.png)
-
-### Task List with Filtering
-![Task List](docs/images/task-list.png)
-
-### Task Creation Form
-![Task Form](docs/images/task-form.png)
-
 ## Installation
 
 1. Clone the repository:
