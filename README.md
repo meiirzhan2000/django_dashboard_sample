@@ -27,7 +27,7 @@ A modern task management dashboard built with Django, Fomantic-UI, and DevExpres
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/task-dashboard.git
+git clone https://github.com/meiirzhan2000/django_dashboard_sample.git
 cd task-dashboard
 ```
 
